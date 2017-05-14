@@ -4,17 +4,14 @@
     <hr/>
     <input type="file" name="image" accept="image/*" @change="this.setImage"/>
     <br/>
-    <div>
-      <VueCropper></VueCropper>
+    <div class="cropper">
+      <img :src="imgSrc" class="img-src"/>
     </div>
-    <img :src="cropImg" alt="Cropped Image"/>
-    <br/>
-    <button v-show="!!imgSrc" @click="this.rotate">Rotate</button>
+    <img :src="cropImg" class="cropped"/>
   </div>
 </template>
 
 <script>
-import VueCropper from 'vue-cropperjs'
 export default {
   name: 'hello',
   data () {
@@ -32,6 +29,15 @@ export default {
     this.mount()
   },
   methods: {
+    mount () {
+      this.$el.querySelector('.img-src').cropper({
+        aspectRatio: 1,
+        crop: function (e) {
+          this.cropImg = this.getCroppedCanvas().toDataURL()
+        }
+
+      })
+    },
     setImage (e) {
       const file = e.target.files[0]
       if (!file.type.includes('image/')) {
@@ -42,25 +48,13 @@ export default {
         const reader = new FileReader()
         reader.onload = (event) => {
           this.imgSrc = event.target.result
-          // rebuild cropperjs with the updated source
-          this.VueCropper.cropper.replace(event.target.result)
+          this.cropImg = event.target.result
         }
         reader.readAsDataURL(file)
       } else {
         alert('Sorry, FileReader API not supported')
       }
-    },
-    cropImage () {
-      // get image data for post processing, e.g. upload or setting image src
-      this.cropImg = this.VueCropper.cropper.getCroppedCanvas().toDataURL()
-    },
-    rotate () {
-      // guess what this does :)
-      this.VueCropper.cropper.rotate(90)
     }
-  },
-  components: {
-    VueCropper
   }
 }
 </script>
@@ -74,11 +68,15 @@ export default {
     font-size: 1.2em;
     padding: 10px 0;
   }
-  div {
+  .cropper {
     max-width: 900px;
     display: inline-block;
+    .img-src {
+      width: 400px;
+      height: 300px;
+    }
   }
-  img {
+  .cropped {
     width: 200px;
     height: 150px;
     border: 1px solid gray;
