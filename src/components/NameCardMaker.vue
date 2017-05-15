@@ -9,12 +9,11 @@
 
     </div>
 
-    <div style="padding:20px;">
+    <div class="main-div" style="">
       <div class="show">
-        <div class="picture" :style="'backgroundImage:url('+headerImage+')'">
-        </div>
+        <img class="picture" :src="headerImage">
       </div>
-      <div style="margin-top:20px;">
+      <div class="input-div">
         <input type="file" id="change" accept="image" @change="change">
         <label for="change"></label>
       </div>
@@ -40,8 +39,8 @@
       }
     },
     mounted () {
-      var self = this
-      var image = document.getElementById('image')
+      let self = this
+      let image = document.getElementById('image')
       this.cropper = new Cropper(image, {
         aspectRatio: 1,
         background: false,
@@ -88,12 +87,18 @@
   }
 </script>
 
-<style>
+<style type="scss">
   *{
     margin: 0;
     padding: 0;
   }
-  #demo #button {
+  .main-div {
+    padding:20px;
+  }
+  .input-div {
+    margin-top:20px;
+  }
+  #button {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -103,21 +108,21 @@
     border-radius: 5px;
     background:white;
   }
-  #demo .show {
+  .show {
     width: 100px;
     height: 100px;
     overflow: hidden;
     position: relative;
     border: 1px solid #d5d5d5;
   }
-  #demo .picture {
+  .picture {
     width: 100%;
     height: 100%;
     overflow: hidden;
     background: no-repeat center center;
     background-size: cover;
   }
-  #demo .container {
+  .container {
     z-index: 99;
     position: fixed;
     padding-top: 60px;
@@ -128,7 +133,7 @@
     background:rgba(0,0,0,1);
   }
 
-  #demo #image {
+  #image {
     max-width: 100%;
   }
 
