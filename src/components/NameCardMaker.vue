@@ -5,17 +5,14 @@
         <img id="image" :src="url" alt="Picture">
       </div>
 
-      <button type="button" id="button" @click="crop">确定</button>
-
     </div>
 
     <div class="main-div" style="">
-      <div class="show">
-        <img class="picture" :src="headerImage">
-      </div>
       <div class="input-div">
         <input type="file" id="change" accept="image" @change="change">
         <label for="change"></label>
+      </div>
+      <div class="show">
       </div>
 
     </div>
@@ -35,18 +32,36 @@
         cropper: '',
         croppable: false,
         panel: false,
-        url: ''
+        url: '',
+        image: document.getElementById('image')
       }
     },
     mounted () {
       let self = this
-      let image = document.getElementById('image')
-      this.cropper = new Cropper(image, {
+      this.image = document.getElementById('image')
+      this.elem = document.getElementsByClassName('show')[0]
+      this.cropper = new Cropper(this.image, {
         aspectRatio: 1,
         background: false,
         zoomable: false,
         ready: function () {
           self.croppable = true
+        },
+
+        crop: function (e) {
+          let data = e.detail
+          let cropper = self.cropper
+          let imageData = cropper.getImageData()
+          let previewAspectRatio = data.width / data.height
+          let previewImage = this.elem.getElementsByTagName('img').item(0)
+          let previewWidth = this.elem.offsetWidth
+          let previewHeight = previewWidth / previewAspectRatio
+          let imageScaledRatio = data.width / previewWidth
+          this.elem.style.height = previewHeight + 'px'
+          previewImage.style.width = imageData.naturalWidth / imageScaledRatio + 'px'
+          previewImage.style.height = imageData.naturalHeight / imageScaledRatio + 'px'
+          previewImage.style.marginLeft = -data.x / imageScaledRatio + 'px'
+          previewImage.style.marginTop = -data.y / imageScaledRatio + 'px'
         }
       })
     },
@@ -72,16 +87,18 @@
         if (this.cropper) {
           this.cropper.replace(this.url)
         }
+        var clone = this.image.cloneNode()
+        clone.className = ''
+        clone.style.cssText = (
+          'display: block;' +
+          'width: 100%;' +
+          'min-width: 0;' +
+          'min-height: 0;' +
+          'max-width: none;' +
+          'max-height: none;'
+        )
+        this.elem.appendChild(clone.cloneNode())
         this.panel = true
-      },
-      crop () {
-        this.panel = false
-        var croppedCanvas
-        if (!this.croppable) {
-          return
-        }
-        croppedCanvas = this.cropper.getCroppedCanvas()
-        this.headerImage = croppedCanvas.toDataURL()
       }
     }
   }
