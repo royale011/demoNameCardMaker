@@ -26,26 +26,19 @@
     },
     data () {
       return {
-        headerImage: '',
         picValue: '',
         cropper: '',
-        croppable: false,
         panel: false,
-        url: '',
-        image: document.getElementById('image')
+        url: ''
       }
     },
     mounted () {
       let self = this
-      this.image = document.getElementById('image')
-      this.cropper = new Cropper(this.image, {
+      let image = document.getElementById('image')
+      this.cropper = new Cropper(image, {
         aspectRatio: 1,
         background: false,
         zoomable: false,
-        ready: function () {
-          self.croppable = true
-        },
-
         crop: function (e) {
           let elem = document.getElementsByClassName('show')[0]
           let data = e.detail
@@ -79,14 +72,14 @@
       change (e) {
         let files = e.target.files || e.dataTransfer.files
         if (!files.length) return
-        this.panel = true
         this.picValue = files[0]
 
         this.url = this.getObjectURL(this.picValue)
         if (this.cropper) {
           this.cropper.replace(this.url)
         }
-        let clone = this.image.cloneNode()
+        let image = document.getElementById('image')
+        let clone = image.cloneNode()
         clone.className = ''
         clone.style.cssText = (
           'display: block;' +
