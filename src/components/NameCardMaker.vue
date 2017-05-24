@@ -12,8 +12,7 @@
         <input type="file" id="change" accept="image" @change="change">
         <label for="change"></label>
       </div>
-      <div class="show">
-      </div>
+      <div class="show"></div>
 
     </div>
   </div>
@@ -39,7 +38,6 @@
     mounted () {
       let self = this
       this.image = document.getElementById('image')
-      this.elem = document.getElementsByClassName('show')[0]
       this.cropper = new Cropper(this.image, {
         aspectRatio: 1,
         background: false,
@@ -49,15 +47,16 @@
         },
 
         crop: function (e) {
+          let elem = document.getElementsByClassName('show')[0]
           let data = e.detail
           let cropper = self.cropper
           let imageData = cropper.getImageData()
           let previewAspectRatio = data.width / data.height
-          let previewImage = this.elem.getElementsByTagName('img').item(0)
-          let previewWidth = this.elem.offsetWidth
+          let previewImage = elem.getElementsByTagName('img').item(0)
+          let previewWidth = elem.offsetWidth
           let previewHeight = previewWidth / previewAspectRatio
           let imageScaledRatio = data.width / previewWidth
-          this.elem.style.height = previewHeight + 'px'
+          elem.style.height = previewHeight + 'px'
           previewImage.style.width = imageData.naturalWidth / imageScaledRatio + 'px'
           previewImage.style.height = imageData.naturalHeight / imageScaledRatio + 'px'
           previewImage.style.marginLeft = -data.x / imageScaledRatio + 'px'
@@ -87,7 +86,7 @@
         if (this.cropper) {
           this.cropper.replace(this.url)
         }
-        var clone = this.image.cloneNode()
+        let clone = this.image.cloneNode()
         clone.className = ''
         clone.style.cssText = (
           'display: block;' +
@@ -97,7 +96,8 @@
           'max-width: none;' +
           'max-height: none;'
         )
-        this.elem.appendChild(clone.cloneNode())
+        let elem = document.getElementsByClassName('show')[0]
+        elem.appendChild(clone.cloneNode())
         this.panel = true
       }
     }
