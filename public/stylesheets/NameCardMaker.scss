@@ -3,6 +3,12 @@
   padding: 0;
 }
 
+#demo {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .name-card-div {
   border: 1px solid #000000;
   background-color: #F7F7F7;
@@ -22,6 +28,12 @@
   display: flex;
 }
 
+.input-div {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+}
+
 .cropped-image-div {
   width: 100px;
   height: 100px;
@@ -36,8 +48,8 @@
 
 .image-cropper-container {
   z-index: 99;
-  width: 50vw;
-  height: 50vh;
+  min-width: 384px;
+  width: 38.4vw;
   background:rgba(0,0,0,1);
   display: inline-block;
   text-align: center;

@@ -1,43 +1,47 @@
 <template>
   <div id="demo">
-    <h1>Get Your Name Card by Two Step!</h1>
-    <div class="name-card-div">
-      <div class="result-div">
-        <div class="cropped-image-div"></div>
-        <table>
-          <tr>
-            <td>Name</td>
-            <td id="name">{{name}}</td>
-          </tr>
-          <tr>
-            <td>Email</td>
-            <td id="email">{{email}}</td>
-          </tr>
-          <tr>
-            <td>WeChat</td>
-            <td id="wechat">{{wechat}}</td>
-          </tr>
-        </table>
+    <div>
+      <h1>Get Your Name Card by Two Step!</h1>
+      <div class="name-card-div">
+        <div class="result-div">
+          <div class="cropped-image-div"></div>
+          <table>
+            <tr>
+              <td>Name</td>
+              <td id="name">{{name}}</td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td id="email">{{email}}</td>
+            </tr>
+            <tr>
+              <td>WeChat</td>
+              <td id="wechat">{{wechat}}</td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
-    <div>
-      <h2>Step 1: Fill Your Basic Info</h2>
-      <p>Your Name:</p>
-      <label for="name-input"></label><input id="name-input" type="text" v-model="name" :placeholder="'Input your name here'">
-      <p>Your Email Address:</p>
-      <label for="name-input"></label><input id="email-input" type="text" v-model="email" :placeholder="'Input your email here'">
-      <p>Your WeChat:</p>
-      <label for="name-input"></label><input id="wechat-input" type="text" v-model="wechat" :placeholder="'Input your email here'">
-  </div>
-    <div>
-      <h2>Step 2: Choose Your Avatar</h2>
-      <div class="choose-file-div">
-        <input type="file" id="change" accept="image" @change="change">
-        <label for="change"></label>
+    <div class="input-div">
+      <div>
+        <h2>Step 1: Fill Your Basic Info</h2>
+        <p>Your Name:</p>
+        <label for="name-input"></label><input id="name-input" type="text" v-model="name" :placeholder="'Input your name here'">
+        <p>Your Email Address:</p>
+        <label for="email-input"></label><input id="email-input" type="text" v-model="email" :placeholder="'Input your email here'">
+        <p>Your WeChat:</p>
+        <label for="wechat-input"></label><input id="wechat-input" type="text" v-model="wechat" :placeholder="'Input your email here'">
       </div>
-      <div class="image-cropper-container" v-show="panel">
-        <div>
-          <img id="image" :src="imageUrl" alt="Picture">
+      <div>
+        <h2>Step 2: Choose Your Avatar</h2>
+        <div class="choose-file-div">
+          <input type="file" id="change" accept="image" @change="change">
+          <label for="change"></label>
+        </div>
+        <div class="image-cropper-container" v-show="panel">
+          <div>
+            <img id="image" :src="imageUrl" alt="Picture">
+          </div>
         </div>
       </div>
     </div>
@@ -77,14 +81,26 @@
           let previewImage = elem.getElementsByTagName('img').item(0)
           let previewWidth = elem.offsetWidth
           let previewHeight = previewWidth / previewAspectRatio
-          let imageScaledRatio = data.width / previewWidth
+          let imageScaledRatioWidth = data.width / previewWidth
+          let imageScaledRatioHeight = data.height / previewHeight
           elem.style.height = previewHeight + 'px'
-          previewImage.style.width = imageData.naturalWidth / imageScaledRatio + 'px'
-          previewImage.style.height = imageData.naturalHeight / imageScaledRatio + 'px'
-          previewImage.style.marginLeft = -data.x / imageScaledRatio + 'px'
-          previewImage.style.marginTop = -data.y / imageScaledRatio + 'px'
+          previewImage.style.width = imageData.naturalWidth / imageScaledRatioWidth + 'px'
+          previewImage.style.height = imageData.naturalHeight / imageScaledRatioHeight + 'px'
+          previewImage.style.marginLeft = -data.x / imageScaledRatioWidth + 'px'
+          previewImage.style.marginTop = -data.y / imageScaledRatioHeight + 'px'
+          previewImage.style.marginRight = -(data.x + data.width) / imageScaledRatioWidth + 'px'
+          previewImage.style.marginBottom = -(data.y + data.height) / imageScaledRatioHeight + 'px'
         }
       })
+    },
+    watch: {
+      picValue: function () {
+        this.imageUrl = this.getObjectURL(this.picValue)
+        if (this.cropper) {
+          this.cropper.replace(this.imageUrl)
+        }
+        this.setImageToPreview()
+      }
     },
     methods: {
       getObjectURL (file) {
@@ -102,11 +118,9 @@
         let files = e.target.files || e.dataTransfer.files
         if (!files.length) return
         this.picValue = files[0]
-
-        this.imageUrl = this.getObjectURL(this.picValue)
-        if (this.cropper) {
-          this.cropper.replace(this.imageUrl)
-        }
+        this.panel = true
+      },
+      setImageToPreview: function () {
         let image = document.getElementById('image')
         let clone = image.cloneNode()
         clone.className = ''
@@ -119,8 +133,15 @@
           'max-height: none;'
         )
         let elem = document.getElementsByClassName('cropped-image-div')[0]
-        elem.appendChild(clone.cloneNode())
-        this.panel = true
+        let childList = elem.childNodes
+        if (childList.length > 0) {
+          for (let i = 1; i < childList.length; i++) {
+            elem.removeChild(childList[i])
+          }
+          elem.replaceChild(clone.cloneNode(), childList[0])
+        } else {
+          elem.appendChild(clone.cloneNode())
+        }
       }
     }
   }

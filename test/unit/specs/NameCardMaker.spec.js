@@ -1,6 +1,34 @@
 import Vue from 'vue'
 import Utils from './Utils'
 import NameCardMaker from '@/components/NameCardMaker'
+import Cropper from 'cropperjs'
+
+function createCropper(vm) {
+  vm.cropper = new Cropper(vm.$el.querySelector('#image'), {
+    aspectRatio: 1,
+    background: false,
+    zoomable: false,
+    crop: function (e) {
+      let elem = document.querySelector('.cropped-image-div')
+      let data = e.detail
+      let cropper = vm.cropper
+      let imageData = cropper.getImageData()
+      let previewAspectRatio = data.width / data.height
+      let previewImage = elem.getElementsByTagName('img').item(0)
+      let previewWidth = elem.offsetWidth
+      let previewHeight = previewWidth / previewAspectRatio
+      let imageScaledRatioWidth = data.width / previewWidth
+      let imageScaledRatioHeight = data.height / previewHeight
+      elem.style.height = previewHeight + 'px'
+      previewImage.style.width = imageData.naturalWidth / imageScaledRatioWidth + 'px'
+      previewImage.style.height = imageData.naturalHeight / imageScaledRatioHeight + 'px'
+      previewImage.style.marginLeft = -data.x / imageScaledRatioWidth + 'px'
+      previewImage.style.marginTop = -data.y / imageScaledRatioHeight + 'px'
+      previewImage.style.marginRight = -(data.x + data.width) / imageScaledRatioWidth + 'px'
+      previewImage.style.marginBottom = -(data.y + data.height) / imageScaledRatioHeight + 'px'
+    }
+  })
+}
 
 describe('NameCardMaker.vue', () => {
   it('should have empty info when mounted', () => {
@@ -39,6 +67,26 @@ describe('NameCardMaker.vue', () => {
     Utils.nextTick(done, 1, function () {
       expect(vm.$el.querySelector('#wechat').textContent)
         .to.equal('wechat')
+    })
+  })
+  it('should change cropper status when add image', (done) => {
+    const Constructor = Vue.extend(NameCardMaker)
+    const vm = new Constructor().$mount()
+    Utils.nextTick(done, 1, function () { // we need to create cropper again as in unit test, document elements have not generated until next tick
+      createCropper(vm);
+      vm.picValue = {name: 'name', type: 'image/jpeg'}
+      Utils.nextTick(done, 1, function () {
+        console.log(vm.$el.querySelector('.cropped-image-div'))
+        expect(vm.$el.querySelector('.cropped-image-div').childNodes.length).to.equal(1)
+        expect(vm.$el.querySelector('.cropped-image-div img').style.cssText).to.equal((
+          'display: block;' +
+          'width: 100%;' +
+          'min-width: 0;' +
+          'min-height: 0;' +
+          'max-width: none;' +
+          'max-height: none;'
+        ))
+      })
     })
   })
 })
