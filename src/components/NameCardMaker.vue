@@ -9,6 +9,10 @@
             <td>Name</td>
             <td>{{name}}</td>
           </tr>
+          <tr>
+            <td>Email</td>
+            <td>{{email}}</td>
+          </tr>
         </table>
       </div>
     </div>
@@ -16,6 +20,8 @@
       <h2>Step 1: Fill Your Basic Info</h2>
       <p>Your Name:</p>
       <label for="name-input"></label><input id="name-input" type="text" v-model="name" :placeholder="'Input your name here'">
+      <p>Your Email Address:</p>
+      <label for="name-input"></label><input id="email-input" type="text" v-model="email" :placeholder="'Input your email here'">
   </div>
     <div>
       <h2>Step 2: Choose Your Avatar</h2>
@@ -44,7 +50,8 @@
         cropper: '',
         panel: false,
         imageUrl: '',
-        name: ''
+        name: '',
+        email: ''
       }
     },
     mounted () {
