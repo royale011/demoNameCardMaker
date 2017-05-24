@@ -23,9 +23,34 @@
   height: 21.6vw;
 }
 
+table {
+  padding-left: 15px;
+}
+
+tr {
+  min-height: 25%;
+  line-height: 250%;
+}
+
+td {
+  text-align: left;
+}
+
+.name-card-title {
+  min-width: 20%;
+  padding-right: 5%;
+  font-weight: bold;
+  font-family: serif;
+}
+
 .result-div {
   padding:20px;
   display: flex;
+}
+
+p {
+  text-align: left;
+  margin-top: 10px;
 }
 
 .input-div {
@@ -34,9 +59,26 @@
   flex-direction: column;
 }
 
+h2 {
+  margin: 20px;
+}
+
+.basic-info-div-wrapper {
+  position: relative;
+  left: 50%;
+}
+
+.basic-info-div {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  width: 50%;
+  left: -50%;
+}
+
 .cropped-image-div {
-  width: 100px;
-  height: 100px;
+  min-width: 100px;
+  min-height: 100px;
   overflow: hidden;
   border: 1px solid #d5d5d5;
   display: flex;

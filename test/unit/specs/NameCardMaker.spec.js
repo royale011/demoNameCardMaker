@@ -73,19 +73,16 @@ describe('NameCardMaker.vue', () => {
     const Constructor = Vue.extend(NameCardMaker)
     const vm = new Constructor().$mount()
     Utils.nextTick(done, 1, function () { // we need to create cropper again as in unit test, document elements have not generated until next tick
-      createCropper(vm);
+      createCropper(vm)
       vm.picValue = {name: 'name', type: 'image/jpeg'}
       Utils.nextTick(done, 1, function () {
-        console.log(vm.$el.querySelector('.cropped-image-div'))
         expect(vm.$el.querySelector('.cropped-image-div').childNodes.length).to.equal(1)
-        expect(vm.$el.querySelector('.cropped-image-div img').style.cssText).to.equal((
-          'display: block;' +
-          'width: 100%;' +
-          'min-width: 0;' +
-          'min-height: 0;' +
-          'max-width: none;' +
-          'max-height: none;'
-        ))
+        expect(vm.$el.querySelector('.cropped-image-div img').style.display).to.equal('block')
+        expect(vm.$el.querySelector('.cropped-image-div img').style.width).to.equal('100%')
+        expect(vm.$el.querySelector('.cropped-image-div img').style.minWidth).to.equal('0')
+        expect(vm.$el.querySelector('.cropped-image-div img').style.minHeight).to.equal('0')
+        expect(vm.$el.querySelector('.cropped-image-div img').style.maxWidth).to.equal('none')
+        expect(vm.$el.querySelector('.cropped-image-div img').style.maxHeight).to.equal('none')
       })
     })
   })
