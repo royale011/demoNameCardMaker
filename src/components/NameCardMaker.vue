@@ -1,19 +1,33 @@
 <template>
   <div id="demo">
-    <div class="container" v-show="panel">
-      <div>
-        <img id="image" :src="url" alt="Picture">
+    <h1>Get Your Name Card by Two Step!</h1>
+    <div class="name-card-div">
+      <div class="result-div">
+        <div class="cropped-image-div"></div>
+        <table>
+          <tr>
+            <td>Name</td>
+            <td>{{name}}</td>
+          </tr>
+        </table>
       </div>
-
     </div>
-
-    <div class="main-div" style="">
-      <div class="input-div">
+    <div>
+      <h2>Step 1: Fill Your Basic Info</h2>
+      <p>Your Name:</p>
+      <label for="name-input"></label><input id="name-input" type="text" v-model="name" :placeholder="'Input your name here'">
+  </div>
+    <div>
+      <h2>Step 2: Choose Your Avatar</h2>
+      <div class="choose-file-div">
         <input type="file" id="change" accept="image" @change="change">
         <label for="change"></label>
       </div>
-      <div class="show"></div>
-
+      <div class="image-cropper-container" v-show="panel">
+        <div>
+          <img id="image" :src="imageUrl" alt="Picture">
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -29,7 +43,8 @@
         picValue: '',
         cropper: '',
         panel: false,
-        url: ''
+        imageUrl: '',
+        name: ''
       }
     },
     mounted () {
@@ -40,7 +55,7 @@
         background: false,
         zoomable: false,
         crop: function (e) {
-          let elem = document.getElementsByClassName('show')[0]
+          let elem = document.getElementsByClassName('cropped-image-div')[0]
           let data = e.detail
           let cropper = self.cropper
           let imageData = cropper.getImageData()
@@ -59,7 +74,7 @@
     },
     methods: {
       getObjectURL (file) {
-        var url = null
+        let url = null
         if (window.createObjectURL !== undefined) { // basic
           url = window.createObjectURL(file)
         } else if (window.URL !== undefined) { // mozilla(firefox)
@@ -74,9 +89,9 @@
         if (!files.length) return
         this.picValue = files[0]
 
-        this.url = this.getObjectURL(this.picValue)
+        this.imageUrl = this.getObjectURL(this.picValue)
         if (this.cropper) {
-          this.cropper.replace(this.url)
+          this.cropper.replace(this.imageUrl)
         }
         let image = document.getElementById('image')
         let clone = image.cloneNode()
@@ -89,7 +104,7 @@
           'max-width: none;' +
           'max-height: none;'
         )
-        let elem = document.getElementsByClassName('show')[0]
+        let elem = document.getElementsByClassName('cropped-image-div')[0]
         elem.appendChild(clone.cloneNode())
         this.panel = true
       }
