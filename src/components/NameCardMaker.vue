@@ -7,11 +7,15 @@
         <table>
           <tr>
             <td>Name</td>
-            <td>{{name}}</td>
+            <td id="name">{{name}}</td>
           </tr>
           <tr>
             <td>Email</td>
-            <td>{{email}}</td>
+            <td id="email">{{email}}</td>
+          </tr>
+          <tr>
+            <td>WeChat</td>
+            <td id="wechat">{{wechat}}</td>
           </tr>
         </table>
       </div>
@@ -22,6 +26,8 @@
       <label for="name-input"></label><input id="name-input" type="text" v-model="name" :placeholder="'Input your name here'">
       <p>Your Email Address:</p>
       <label for="name-input"></label><input id="email-input" type="text" v-model="email" :placeholder="'Input your email here'">
+      <p>Your WeChat:</p>
+      <label for="name-input"></label><input id="wechat-input" type="text" v-model="wechat" :placeholder="'Input your email here'">
   </div>
     <div>
       <h2>Step 2: Choose Your Avatar</h2>
@@ -51,7 +57,8 @@
         panel: false,
         imageUrl: '',
         name: '',
-        email: ''
+        email: '',
+        wechat: ''
       }
     },
     mounted () {

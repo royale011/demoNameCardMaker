@@ -21,4 +21,13 @@ describe('NameCardMaker.vue', (done) => {
         .to.equal('test@example.com')
     })
   })
+  it('should show wechat in card when input wechat', () => {
+    const Constructor = Vue.extend(NameCardMaker)
+    const vm = new Constructor().$mount()
+    vm.$el.querySelector('#wechat-input').value = 'test@example.com'
+    Utils.nextTick(done, 1, function () {
+      expect(vm.$el.querySelector('#wechat').textContent)
+        .to.equal('test@example.com')
+    })
+  })
 })
