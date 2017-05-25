@@ -3,7 +3,7 @@ import Utils from './Utils'
 import NameCardMaker from '@/components/NameCardMaker'
 import Cropper from 'cropperjs'
 
-function createCropper(vm) {
+function createCropper (vm) {
   vm.cropper = new Cropper(vm.$el.querySelector('#image'), {
     aspectRatio: 1,
     background: false,
@@ -83,6 +83,30 @@ describe('NameCardMaker.vue', () => {
         expect(vm.$el.querySelector('.cropped-image-div img').style.minHeight).to.equal('0')
         expect(vm.$el.querySelector('.cropped-image-div img').style.maxWidth).to.equal('none')
         expect(vm.$el.querySelector('.cropped-image-div img').style.maxHeight).to.equal('none')
+      })
+    })
+  })
+  it('should crop image when set cropper info', (done) => {
+    const Constructor = Vue.extend(NameCardMaker)
+    const vm = new Constructor().$mount()
+    Utils.nextTick(done, 1, function () { // we need to create cropper again as in unit test, document elements have not generated until next tick
+      createCropper(vm)
+      vm.picValue = {name: 'name', type: 'image/jpeg'}
+      Utils.nextTick(done, 1, function () {
+        vm.cropper.setCropBoxData({
+          left: 5,
+          top: 5,
+          width: 5,
+          height: 5
+        })
+        Utils.nextTick(done, 1, function () {
+          expect(vm.$el.querySelector('.cropped-image-div img').style.width).to.equal('0')
+          expect(vm.$el.querySelector('.cropped-image-div img').style.height).to.equal('0')
+          expect(vm.$el.querySelector('.cropped-image-div img').style.marginLeft).to.equal('0')
+          expect(vm.$el.querySelector('.cropped-image-div img').style.marginRight).to.equal('0')
+          expect(vm.$el.querySelector('.cropped-image-div img').style.marginTop).to.equal('0')
+          expect(vm.$el.querySelector('.cropped-image-div img').style.marginBottom).to.equal('0')
+        })
       })
     })
   })

@@ -132,7 +132,8 @@
         } else {
           elem.appendChild(node)
         }
-      }, setImageToPreview: function () {
+      },
+      setImageToPreview: function () {
         let image = document.getElementById('image')
         let clone = image.cloneNode()
         clone.src = this.imageUrl
