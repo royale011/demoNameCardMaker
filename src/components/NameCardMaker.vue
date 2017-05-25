@@ -122,7 +122,17 @@
         this.picValue = files[0]
         this.panel = true
       },
-      setImageToPreview: function () {
+      replaceChild: function (elem, node) {
+        let childList = elem.childNodes
+        if (childList.length > 0) {
+          for (let i = 1; i < childList.length; i++) {
+            elem.removeChild(childList[i])
+          }
+          elem.replaceChild(node, childList[0])
+        } else {
+          elem.appendChild(node)
+        }
+      }, setImageToPreview: function () {
         let image = document.getElementById('image')
         let clone = image.cloneNode()
         clone.src = this.imageUrl
@@ -134,15 +144,7 @@
         clone.style.maxWidth = 'none'
         clone.style.maxHeight = 'none'
         let elem = document.getElementsByClassName('cropped-image-div')[0]
-        let childList = elem.childNodes
-        if (childList.length > 0) {
-          for (let i = 1; i < childList.length; i++) {
-            elem.removeChild(childList[i])
-          }
-          elem.replaceChild(clone, childList[0])
-        } else {
-          elem.appendChild(clone)
-        }
+        this.replaceChild(elem, clone)
       }
     }
   }
